@@ -3,32 +3,42 @@ import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { register } from "../store/auth/authSlice";
+import {
+  register,
+  getUserFromLocalStorage,
+  reset,
+} from "../store/auth/authSlice";
 import styles from "./RegisterPage.module.css";
 import { z } from "zod";
+import { useSelector } from "react-redux";
 
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { user, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.auth
+  );
 
   const registerSchema = z.object({
     name: z.string().min(3),
     email: z.string().email(),
     password: z.string().min(8),
+    persistUser: z.boolean(),
   });
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
+    persistUser: false,
   });
 
-  const { name, email, password } = formData;
+  const { name, email, password, persistUser } = formData;
   const onChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 
@@ -36,16 +46,34 @@ const Register = () => {
     e.preventDefault();
     try {
       const validatedData = registerSchema.parse(formData);
-      console.log(validatedData);
+      dispatch(register(validatedData));
+      console.log("validatedData", validatedData);
     } catch (error) {
       console.error(error);
       return;
     }
-    dispatch(register(formData));
-    navigate("/");
 
     console.log("Submitted");
   };
+
+  useEffect(() => {
+    console.log("useEffect");
+    console.log({ user, isError, isSuccess });
+    console.log({ message });
+
+    dispatch(getUserFromLocalStorage());
+
+    if (user || isSuccess) {
+      navigate("/connect-page");
+    }
+
+    if (isError) {
+      console.log(message);
+      dispatch(reset());
+    }
+
+    dispatch(reset());
+  }, [user, isError, isSuccess, dispatch, navigate, message]);
 
   return (
     <>
@@ -91,7 +119,13 @@ const Register = () => {
               onChange={onChange}
             />
           </div>
-          <input type="checkbox" id="vehicle1" name="vehicle1" value="Bike" />
+          <input
+            type="checkbox"
+            id="persistUser"
+            name="persistUser"
+            checked={persistUser}
+            onChange={onChange}
+          />
           <label> Remember Me</label>
           <div className="form-group">
             <button type="submit" className="btn btn-block">

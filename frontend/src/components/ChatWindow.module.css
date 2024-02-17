@@ -1,0 +1,7 @@
+.masterChat{
+    height: 100%;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    background: rgb(246, 246, 246);
+    
+}

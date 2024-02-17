@@ -1,48 +1,66 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FacebookLogin from "react-facebook-login";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useNavigate } from "react-router-dom";
-import { fetchPages } from "../store/pages/pageSlice";
 
+import Spinner from "../components/Spinner";
 import styles from "./ConnectPage.module.css";
+import {
+  fetchPages,
+  getPagesFromLocalStorage,
+  reset,
+} from "../store/pages/pageSlice";
 
 const ConnectPage = () => {
-  const dispatch = useDispatch();
+  console.log("ConnectPage");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
+  const { pages, isError, isSuccess, isLoading, message } = useSelector(
+    (state) => state.pages
+  );
 
-  const [userCredentials, setUserCredentials] = useState({});
-  const { isLoggedIn } = useSelector((state) => state.auth);
+  const [userFacebookCredentials, setUserFacebookCredentials] = useState(null);
 
-  useEffect(() => {
-    if (userCredentials.userId) {
-      const fetchUserPages = async (userCredentials) => {
-        await dispatch(fetchPages(userCredentials));
-        navigate("/delete-page");
-      };
-      fetchUserPages(userCredentials);
-    }
-  }, [userCredentials, dispatch]);
-
-  const responseFacebook = (response) => {
+  const responseFacebook = useCallback((response) => {
     if (response.id) {
-      setUserCredentials({
+      console.log("response", response);
+      setUserFacebookCredentials({
         userId: response.id,
         userAccessToken: response.accessToken,
       });
-      console.log({
-        userId: response.id,
-        userAccessToken: response.accessToken,
-      });
-    }
-  };
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      console.log("user not found or user token expired");
-      navigate("/");
+    } else {
+      console.log("User cancelled the login or did not fully authorize.");
     }
   }, []);
+
+  useEffect(() => {
+    if (userFacebookCredentials) {
+      dispatch(fetchPages(userFacebookCredentials));
+    }
+  }, [userFacebookCredentials, dispatch]);
+
+  useEffect(() => {
+    if (isError) {
+      dispatch(reset());
+    }
+    if (pages.length > 0 || isSuccess) {
+      navigate("/delete-page");
+    }
+    dispatch(reset());
+  }, [pages, isError, isSuccess, dispatch, navigate, message]);
+
+  useEffect(() => {
+    dispatch(getPagesFromLocalStorage());
+    if (!user) {
+      console.log("User not found or user token expired");
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <>
@@ -51,7 +69,7 @@ const ConnectPage = () => {
         <FacebookLogin
           appId="930876614928754"
           autoLoad={false}
-          scope="public_profile,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"
+          scope="public_profile,email,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"
           callback={responseFacebook}
           textButton="Connect Page"
           cssClass="my-facebook-button-class"

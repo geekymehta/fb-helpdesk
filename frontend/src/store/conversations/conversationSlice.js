@@ -9,8 +9,11 @@ export const fetchConversations = createAsyncThunk(
       //     thunkAPI.getState().pages.pages[currentPage].access_token;
       //   const pageId = thunkAPI.getState().pages.pages[0].id;
       const response = await fetch(
-        `https://graph.facebook.com/v19.0/${pageId}/conversations?fields=participants,messages{id,from,to,message,created_time}&access_token=${pageAccessToken}`
+        `https://graph.facebook.com/v19.0/${pageId}/conversations?fields=participants,messages{id,to,from,created_time,message},can_reply,id,message_count,name,unread_count,subject&access_token=${pageAccessToken}`
       );
+      if (response.error) {
+        throw new Error(error.message);
+      }
       const data = await response.json();
       console.log("fetchedConversation", data);
       return data;
@@ -47,6 +50,7 @@ const conversationSlice = createSlice({
     },
     deleteConversations: (state) => {
       state.conversations = [];
+      localStorage.removeItem("conversations");
     },
     resetGoToAgentScreen: (state) => {
       state.goToAgentScreen = false;

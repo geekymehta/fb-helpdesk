@@ -3,9 +3,9 @@ import authService from "./authService";
 
 export const register = createAsyncThunk(
   "auth/register",
-  async (user, thunkAPI) => {
+  async (registerData, thunkAPI) => {
     try {
-      return await authService.register(user);
+      return await authService.register(registerData);
     } catch (error) {
       const message =
         (error.response &&
@@ -20,17 +20,22 @@ export const register = createAsyncThunk(
   }
 );
 
-export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
-  try {
-    return await authService.login(user);
-  } catch (error) {
-    const message =
-      (error.response && error.response.data && error.response.data.message) ||
-      error.message ||
-      error.toString();
-    return thunkAPI.rejectWithValue(message);
+export const login = createAsyncThunk(
+  "auth/login",
+  async (loginData, thunkAPI) => {
+    try {
+      return await authService.login(loginData);
+    } catch (error) {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
   }
-});
+);
 
 export const logout = createAsyncThunk("auth/logout", async (thunkAPI) => {
   try {
@@ -49,7 +54,6 @@ const initialState = {
   isLoading: false,
   isError: false,
   isSuccess: false,
-  isLoggedIn: false,
   message: "",
 };
 
@@ -63,8 +67,15 @@ const authSlice = createSlice({
       state.isSuccess = false;
       state.message = "";
     },
-    resetIsLoggedIn: (state) => {
-      state.isLoggedIn = false;
+
+    getUserFromLocalStorage: (state) => {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (user && user.expiry > new Date().getTime()) {
+        state.user = user.data;
+      } else {
+        console.log("deleting user from local storage");
+        localStorage.removeItem("user");
+      }
     },
   },
   extraReducers: (builder) => {
@@ -89,7 +100,6 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = payload;
-        state.isLoggedIn = true;
       })
       .addCase(login.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -103,7 +113,6 @@ const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.user = null;
-        state.isLoggedIn = false;
       })
       .addCase(logout.rejected, (state, { payload }) => {
         state.isLoading = false;
@@ -113,5 +122,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { reset, resetIsLoggedIn } = authSlice.actions;
+export const { reset, getUserFromLocalStorage } = authSlice.actions;
 export default authSlice.reducer;

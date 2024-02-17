@@ -1,69 +1,67 @@
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchConversations } from "../store/conversations/conversationSlice";
 import { useNavigate } from "react-router-dom";
-import { deletePages, setCurrentPage } from "../store/pages/pageSlice";
 import {
-  deleteConversations,
-  resetGoToAgentScreen,
-} from "../store/conversations/conversationSlice";
+  deletePages,
+  setCurrentPage,
+  getPagesFromLocalStorage,
+} from "../store/pages/pageSlice";
+import { deleteConversations } from "../store/conversations/conversationSlice";
 
+import Spinner from "../components/Spinner";
 import styles from "./DeletePage.module.css";
 
 const DeletePage = () => {
+  console.log("DeletePage");
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { pages } = useSelector((state) => state.pages);
-  const { goToAgentScreen } = useSelector((state) => state.conversations);
-  // const { pages, currentpage } = useSelector((state) => state.pages);
-  const { conversations } = useSelector((state) => state.conversations);
+  const { pages, currentPage } = useSelector((state) => state.pages);
+  const { isError, isLoading, isSuccess, conversations, message } = useSelector(
+    (state) => state.conversations
+  );
 
-  const currentpage = pages.length - 1;
-  console.log("length", pages.length);
-
-  let pageId;
-  let pageAccessToken;
-  console.log("pages", pages);
-  console.log("currentpage", currentpage);
-  if (pages.length > 0) {
-    pageId = pages[currentpage].id;
-    pageAccessToken = pages[currentpage].access_token;
-  } else {
-    console.log("No pages found");
-  }
-
-  const getConversations = async () => {
+  const getConversations = useCallback(() => {
     if (pages.length === 0) {
       navigate("/connect-page");
     }
-    const pageId = pages[currentpage].id;
-    const pageAccessToken = pages[currentpage].access_token;
-    await dispatch(fetchConversations({ pageId, pageAccessToken }));
+    const pageId = pages[currentPage].id;
+    const pageAccessToken = pages[currentPage].access_token;
+    dispatch(fetchConversations({ pageId, pageAccessToken }));
     console.log("conversations", conversations);
-  };
+  });
 
-  const deleteIntegration = () => {
+  const deleteIntegration = useCallback(() => {
     dispatch(deletePages());
     dispatch(deleteConversations());
     navigate("/connect-page");
     console.log("Integration Deleted ");
-  };
+  });
 
   useEffect(() => {
-    console.log("conversations", conversations);
-  }, [conversations]);
-
-  useEffect(() => {
-    if (goToAgentScreen) {
-      navigate("/agent-screen");
-      dispatch(resetGoToAgentScreen());
+    if (isError) {
+      console.log(message);
     }
-  }, [goToAgentScreen]);
+    if (isSuccess) {
+      navigate("/agent-screen");
+    }
+  }, [conversations, isSuccess, isError, message, navigate]);
 
   useEffect(() => {
-    dispatch(setCurrentPage(currentpage));
-  }, [currentpage]);
+    if (pages.length === 0) {
+      navigate("/connect-page");
+    }
 
+    dispatch(setCurrentPage(pages.length - 1));
+  }, [pages, navigate]);
+
+  useEffect(() => {
+    dispatch(getPagesFromLocalStorage());
+  }, []);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
   return (
     <>
       <div className={styles["delete-page"]}>

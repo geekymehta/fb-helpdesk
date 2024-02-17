@@ -1,0 +1,36 @@
+.chatWith{
+    display: flex;
+    flex-direction: column; 
+    width: 100%;
+    gap: 0.5rem;
+    padding: 1rem;
+    border-bottom: 1px solid lightgray;
+}
+
+.chatWith .masterContainer{
+display: flex;
+justify-content: flex-start;
+gap: 1rem;
+align-items: center;
+width: 100%;
+}
+
+
+
+.chatWith .masterContainer >p{
+    font-weight:600;
+    flex-grow: 1;
+    text-align: right;
+}
+
+.chatWith .masterContainer p{
+    font-size: small;
+    font-weight:600;
+
+    color: rgb(59, 56, 56);
+   
+}
+
+.chatWith.selected{
+   background-color: rgb(223, 224, 227) ; 
+ }

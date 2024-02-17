@@ -1,0 +1,40 @@
+.conversationsList {
+    height: 100% ;
+
+}
+.conversationsList .masterContainer {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid lightslategray;
+
+}
+
+.conversationsList .masterContainer .masterUpper {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+
+}
+
+.conversationsList .masterContainer button img {
+    width: 20px;
+    height: 20px;
+   object-fit: contain;
+}
+
+.conversationsList .masterContainer button{
+    outline: none;
+    border: none;
+    background: none;
+}
+
+.conversationsList .masterContainer .masterUpper h1{ 
+   font-size: x-large;
+}
+
+.conversationsList .conversations{
+    overflow-y: auto;
+} 

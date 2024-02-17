@@ -1,0 +1,83 @@
+.currentThreadMaster{
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr;
+    border: 1px solid rgb(238, 232, 232);
+
+}
+
+.currentThreadMaster .currentThread{
+    padding: 1rem;
+    background-color: #ffffff;
+    
+}
+
+.currentThreadMaster .currentThread h1{
+   font-size: x-large;
+}
+
+.currentThreadMaster .chats{
+    display:grid; 
+    
+    grid-template-rows: 1fr auto;;
+}
+
+.currentThreadMaster .chats .messageInputMaster{
+    padding: 0 2rem;
+
+}
+
+.currentThreadMaster .chats .messageInputMaster input{
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid blue;
+    border-radius: 5px;
+    margin: 0.5rem 0;
+    font-size: medium;
+}
+
+
+.currentThreadMaster .chats .messages{
+    display: flex;
+    flex-direction: column;
+    gap:0.5rem;
+    overflow-y: auto;
+    max-height: calc(100vh - 140px);
+}
+
+.currentThreadMaster .chats .messages .masterContainer{
+    display: grid;
+    grid-template-columns: 40px 2fr 1fr;
+    gap: 1rem;
+}
+/* .currentThreadMaster .chats .messages .masterContainer.right {
+    display: flex;
+    justify-content: flex-end;
+    border: 1px solid blue;
+} */
+
+
+.currentThreadMaster .chats .messages .masterContainer .messageAvatar{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.currentThreadMaster .chats .messages .masterContainer .messageAvatar img{
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+
+}
+.currentThreadMaster .chats .messages .masterContainer .message .messageContent .messageContentMessage {
+    width: auto; /* Adjust width based on content */
+    padding: 10px 1rem;
+    border-radius: 10px;
+    background-color: rgb(255, 255, 255);
+}
+
+.currentThreadMaster .chats .messages .masterContainer .message .messageContent .messageContentName{
+    font-size: small;
+    color: grey;
+    margin: 0.2rem 0;
+}
