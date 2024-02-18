@@ -22,6 +22,7 @@ npm install
 ## Running Locally
 ```bash
 # Run the web app locally
+# Run this command in the root directory
 npm run dev
 ```
 
