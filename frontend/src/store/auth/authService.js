@@ -1,5 +1,5 @@
 import axios from "axios";
-const apiUri = import.meta.env.VITE_API_URI;
+const apiUri = import.meta.env.VITE_API_URI || "http://localhost:5000";
 
 const authRoute = `${apiUri}/api/auth/`;
 

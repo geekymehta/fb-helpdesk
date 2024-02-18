@@ -16,6 +16,7 @@ const ConnectPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
+  const facebookAppId = import.meta.env.VITE_FACEBOOK_APP_ID;
   const { pages, isError, isSuccess, isLoading, message } = useSelector(
     (state) => state.pages
   );
@@ -69,7 +70,7 @@ const ConnectPage = () => {
           <Title>Facebook Page Integration</Title>
           <div>
             <FacebookLogin
-              appId="930876614928754"
+              appId={facebookAppId}
               autoLoad={false}
               scope="public_profile,email,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"
               callback={responseFacebook}
