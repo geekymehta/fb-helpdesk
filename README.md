@@ -1,4 +1,4 @@
-# Project README
+# Facebook Helpdesk
 
 ## Tech Stack
 - Frontend: React, Redux
