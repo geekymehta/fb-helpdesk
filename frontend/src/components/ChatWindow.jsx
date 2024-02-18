@@ -40,6 +40,7 @@ const ChatWindow = () => {
             <ChatThread
               currentConversation={currentConversation.messages.data}
               participants={currentConversation.participants.data}
+              canReply={currentConversation.can_reply}
             />
           )}
         {conversationId && profile && <Profile profile={profile} />}

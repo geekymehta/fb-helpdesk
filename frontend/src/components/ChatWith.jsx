@@ -1,7 +1,8 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
 import styles from "./ChatWith.module.css";
-import { set } from "mongoose";
+import { setLastMessageTime } from "../store/chat/chatWithSlice";
+import { useDispatch } from "react-redux";
 
 const ChatWith = ({
   conversationId,
@@ -9,13 +10,33 @@ const ChatWith = ({
   lastMessage,
   unreadCount,
   canReply,
+  timeDelta,
   time,
   subject,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { search } = useLocation();
 
   const [currentConversation, setCurrentConversation] = useState([]);
+
+  const diffTimeInHours = (time) => {
+    const date = new Date(time);
+    if (isNaN(date.getTime())) {
+      console.error(`Invalid date: ${time}`);
+      return;
+    }
+
+    const diffInMilliseconds = new Date() - date;
+    const diffInHours = diffInMilliseconds / (1000 * 60 * 60);
+    dispatch(setLastMessageTime(Number(diffInHours.toFixed(2))));
+  };
+
+  useEffect(() => {
+    if (time) {
+      diffTimeInHours(time);
+    }
+  }, [time, lastMessage, currentConversation]);
 
   useEffect(() => {
     const query = new URLSearchParams(search);
@@ -29,8 +50,6 @@ const ChatWith = ({
       location.pathname.lastIndexOf("/")
     );
     navigate(`${pathName}?conversationId=${conversationId}`);
-
-    console.log("navigateToConversation");
   };
 
   return (
@@ -47,12 +66,13 @@ const ChatWith = ({
           <h3>{name}</h3>
           <p>Facebook DM</p>
         </div>
-        {time && <p>{time}</p>}
+        {timeDelta && <p>{timeDelta}</p>}
       </div>
       {lastMessage && (
         <div className={styles.messageContainer}>
           <div>
-            <h4>{subject}</h4>
+            <h4>{subject || "Empty Subject"}</h4>
+
             <p>{lastMessage}</p>
           </div>
           {/* {unreadCount > 0 && <p>{unreadCount}</p>} */}

@@ -8,9 +8,11 @@ import {
   getUserFromLocalStorage,
   reset,
 } from "../store/auth/authSlice";
-import styles from "./RegisterPage.module.css";
 import { z } from "zod";
 import { useSelector } from "react-redux";
+
+import Title from "../components/Title";
+import styles from "./RegisterPage.module.css";
 
 const Register = () => {
   const dispatch = useDispatch();
@@ -47,7 +49,6 @@ const Register = () => {
     try {
       const validatedData = registerSchema.parse(formData);
       dispatch(register(validatedData));
-      console.log("validatedData", validatedData);
     } catch (error) {
       console.error(error);
       return;
@@ -77,15 +78,15 @@ const Register = () => {
 
   return (
     <>
-      <div className={styles["register-page"]}>
-        <p>Create Accouynt</p>
-        <form onSubmit={onSubmit}>
-          <div className="form-group">
+      <div className={styles.registerPage}>
+        <p>Create Account</p>
+        <form onSubmit={onSubmit} className={styles.registerPageFormContainer}>
+          <Title>Create Account</Title>
+          <div className={styles.formGroup}>
             <label>Name</label>
-            <br />
             <input
               type="text"
-              className="form-control"
+              className={styles.formControl}
               id="name"
               name="name"
               value={name}
@@ -93,12 +94,11 @@ const Register = () => {
               onChange={onChange}
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>Email</label>
-            <br />
             <input
               type="text"
-              className="form-control"
+              className={styles.formControl}
               id="email"
               name="email"
               value={email}
@@ -106,12 +106,11 @@ const Register = () => {
               onChange={onChange}
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>Password</label>
-            <br />
             <input
               type="text"
-              className="form-control"
+              className={styles.formControl}
               id="password"
               name="password"
               value={password}
@@ -119,24 +118,28 @@ const Register = () => {
               onChange={onChange}
             />
           </div>
-          <input
-            type="checkbox"
-            id="persistUser"
-            name="persistUser"
-            checked={persistUser}
-            onChange={onChange}
-          />
-          <label> Remember Me</label>
-          <div className="form-group">
-            <button type="submit" className="btn btn-block">
+          <div className={styles.formGroup}>
+            <input
+              type="checkbox"
+              id="persistUser"
+              name="persistUser"
+              checked={persistUser}
+              onChange={onChange}
+            />
+            <label> Remember Me</label>
+          </div>
+          <div className="formGroup">
+            <button
+              type="submit"
+              className={`${styles.btn} ${styles.btnBlock}`}
+            >
               Sign Up
             </button>
           </div>
+          <p className={styles.alt}>
+            Already have an account? <Link to="/">Login</Link>{" "}
+          </p>
         </form>
-
-        <p>
-          Already have an account? <Link to="/">Login</Link>{" "}
-        </p>
       </div>
     </>
   );

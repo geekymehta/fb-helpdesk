@@ -10,9 +10,9 @@ import {
   getPagesFromLocalStorage,
   reset,
 } from "../store/pages/pageSlice";
+import Title from "../components/Title";
 
 const ConnectPage = () => {
-  console.log("ConnectPage");
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.auth);
@@ -64,16 +64,20 @@ const ConnectPage = () => {
 
   return (
     <>
-      <div className={styles["connect-page"]}>
-        <p className="heading">Facebook Page Integration</p>
-        <FacebookLogin
-          appId="930876614928754"
-          autoLoad={false}
-          scope="public_profile,email,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"
-          callback={responseFacebook}
-          textButton="Connect Page"
-          cssClass="my-facebook-button-class"
-        />
+      <div className={styles.connectPage}>
+        <div className={styles.connectPageContainer}>
+          <Title>Facebook Page Integration</Title>
+          <div>
+            <FacebookLogin
+              appId="930876614928754"
+              autoLoad={false}
+              scope="public_profile,email,pages_messaging,pages_show_list,pages_manage_metadata,pages_read_engagement"
+              callback={responseFacebook}
+              textButton="Connect Page"
+              cssClass={`${styles.btn}`}
+            />
+          </div>
+        </div>
       </div>
     </>
   );

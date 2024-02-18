@@ -43,7 +43,6 @@ const Login = () => {
 
     try {
       const validatedData = loginSchema.parse(formData);
-      console.log(validatedData);
       dispatch(login(validatedData));
     } catch (error) {
       console.error(error);
@@ -69,15 +68,15 @@ const Login = () => {
 
   return (
     <>
-      <div className={styles["login-page"]}>
-        <form onSubmit={onSubmit} className="login-page_form-container">
+      <div className={styles["loginPage"]}>
+        <form onSubmit={onSubmit} className={styles.loginPageFormContainer}>
           <Title>Login to your account</Title>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>Email</label>
             <br />
             <input
               type="text"
-              className="form-control"
+              className={styles.formControl}
               id="email"
               name="email"
               value={email}
@@ -85,12 +84,12 @@ const Login = () => {
               onChange={onChange}
             />
           </div>
-          <div className="form-group">
+          <div className={styles.formGroup}>
             <label>Password</label>
             <br />
             <input
               type="text"
-              className="form-control"
+              className={styles.formControl}
               id="password"
               name="password"
               value={password}
@@ -98,23 +97,28 @@ const Login = () => {
               onChange={onChange}
             />
           </div>
-          <input
-            type="checkbox"
-            id="persistUser"
-            name="persistUser"
-            checked={persistUser}
-            onChange={onChange}
-          />
-          <label> Remember Me</label>
-          <div className="form-group">
-            <button type="submit" className="btn btn-block">
+          <div className={styles.formGroup}>
+            <input
+              type="checkbox"
+              id="persistUser"
+              name="persistUser"
+              checked={persistUser}
+              onChange={onChange}
+            />
+            <label> Remember Me</label>
+          </div>
+          <div className={styles.formGroup}>
+            <button
+              type="submit"
+              className={`${styles.btn} ${styles.btnBlock}`}
+            >
               Login
             </button>
           </div>
+          <p className={styles.alt}>
+            New to MyApp? <Link to="/register">Sign Up</Link>{" "}
+          </p>
         </form>
-        <p className="alt">
-          New to MyApp? <Link to="/register">Sign Up</Link>{" "}
-        </p>
       </div>
       {isLoading && <Spinner />}
     </>

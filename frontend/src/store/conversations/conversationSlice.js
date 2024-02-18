@@ -1,22 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 export const fetchConversations = createAsyncThunk(
   "conversations/fetchConversations",
   async ({ pageId, pageAccessToken }, thunkAPI) => {
     try {
-      // const currentPage = thunkAPI.getState().pages.currentPage;
-      //   const pageAccessToken =
-      //     thunkAPI.getState().pages.pages[currentPage].access_token;
-      //   const pageId = thunkAPI.getState().pages.pages[0].id;
-      const response = await fetch(
-        `https://graph.facebook.com/v19.0/${pageId}/conversations?fields=participants,messages{id,to,from,created_time,message},can_reply,id,message_count,name,unread_count,subject&access_token=${pageAccessToken}`
+      const response = await axios.get(
+        `https://graph.facebook.com/v19.0/${pageId}/conversations`,
+        {
+          params: {
+            fields:
+              "messages{created_time,message,id,to,from,thread_id},can_reply,participants,subject,id,unread_count,message_count,name",
+            access_token: pageAccessToken,
+          },
+        }
       );
-      if (response.error) {
-        throw new Error(error.message);
-      }
-      const data = await response.json();
-      console.log("fetchedConversation", data);
-      return data;
+      console.log("fetchedConversation", response.data);
+      return response.data;
     } catch (error) {
       const message =
         (error.response &&
@@ -24,6 +24,39 @@ export const fetchConversations = createAsyncThunk(
           error.response.data.message) ||
         error.message ||
         error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
+export const sendTextMessage = createAsyncThunk(
+  "conversations/sendTextMessage",
+  async ({ pageId, pageAccessToken, recipientPSId, inputText }, thunkAPI) => {
+    const url = `https://graph.facebook.com/v19.0/${pageId}/messages`;
+    const messageData = {
+      recipient: { id: recipientPSId },
+      message: { text: inputText },
+      messaging_type: "RESPONSE",
+    };
+
+    const config = {
+      params: {
+        access_token: pageAccessToken,
+      },
+    };
+
+    try {
+      const response = await axios.post(url, messageData, config);
+      console.log(response.data);
+      if (response.error) {
+        throw new Error(error.message);
+      }
+      const data = await response.json();
+      console.log("sentMessage", data);
+      return data;
+    } catch (error) {
+      console.error(error.response.data);
+      const message = error.message;
       return thunkAPI.rejectWithValue(message);
     }
   }
@@ -76,6 +109,12 @@ const conversationSlice = createSlice({
       state.isError = true;
       state.isSuccess = false;
       state.message = `Error: ${payload}`;
+    });
+    builder.addCase(sendTextMessage.pending, (state) => {
+      state.isLoading = true;
+      state.isError = false;
+      state.isSuccess = false;
+      state.message = "Sending message...";
     });
   },
 });

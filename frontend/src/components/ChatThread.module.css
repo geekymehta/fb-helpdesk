@@ -40,21 +40,33 @@
 .currentThreadMaster .chats .messages{
     display: flex;
     flex-direction: column;
+    align-items: flex-start;
     gap:0.5rem;
     overflow-y: auto;
     max-height: calc(100vh - 140px);
+    padding: 1rem;
 }
 
-.currentThreadMaster .chats .messages .masterContainer{
+.currentThreadMaster .chats .messages .masterContainer {
     display: grid;
     grid-template-columns: 40px 2fr 1fr;
     gap: 1rem;
+    grid-template-areas: "avatar message .";
 }
-/* .currentThreadMaster .chats .messages .masterContainer.right {
-    display: flex;
-    justify-content: flex-end;
-    border: 1px solid blue;
-} */
+
+.currentThreadMaster .chats .messages .masterContainer .messageAvatar {
+    grid-area: avatar;
+}
+
+.currentThreadMaster .chats .messages .masterContainer .message {
+    grid-area: message;
+}
+
+.currentThreadMaster .chats .messages .masterContainer.right {
+    grid-template-areas: ". message avatar";
+     grid-template-columns: 1fr 2fr 40px;
+}
+
 
 
 .currentThreadMaster .chats .messages .masterContainer .messageAvatar{

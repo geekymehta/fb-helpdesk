@@ -1,12 +1,102 @@
-.login-page {
+.loginPage {
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: center;
+  align-items: center;
   height: 100vh;
-  margin: 0;
-  padding: 0;
+  width: 100%;
+  background-color: rgb(0, 57, 111);
+  padding: 2rem;
   box-sizing: border-box;
-  font-family: Arial, sans-serif;
 }
 
+.loginPage .loginPageFormContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1rem;
+  width: 100%;
+  max-width: 30rem;
+  background-color: white;
+  padding: 2rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loginPage .formGroup {
+  margin-bottom: 0.5rem;
+}
+
+.loginPage .formControl {
+  display: block;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.loginPage .formControl:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.loginPage input[type="checkbox"] {
+  margin-right: 0.5rem;
+  transform: scale(1.);
+}
+
+.loginPage label {
+  font-size: 0.9rem;
+  font-weight: 550;
+  color: #000000;
+  cursor: pointer;
+  transition: color 0.15s ease-in-out;
+}
+
+.loginPage label:hover {
+  color: #007bff;
+}
+
+.loginPage .btn {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: white;
+  text-align: center;
+  background-color: #1a4583;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.loginPage .btn:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+}
+
+.loginPage .alt {
+  font-size: 0.85rem;
+
+  color: #6c757d;
+  margin-top: 1.5rem;
+  text-align: center;
+  
+}
+
+.loginPage .alt a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.15s ease-in-out;
+}

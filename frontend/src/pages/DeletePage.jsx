@@ -11,9 +11,9 @@ import { deleteConversations } from "../store/conversations/conversationSlice";
 
 import Spinner from "../components/Spinner";
 import styles from "./DeletePage.module.css";
+import Title from "../components/Title";
 
 const DeletePage = () => {
-  console.log("DeletePage");
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { pages, currentPage } = useSelector((state) => state.pages);
@@ -28,14 +28,12 @@ const DeletePage = () => {
     const pageId = pages[currentPage].id;
     const pageAccessToken = pages[currentPage].access_token;
     dispatch(fetchConversations({ pageId, pageAccessToken }));
-    console.log("conversations", conversations);
   });
 
   const deleteIntegration = useCallback(() => {
     dispatch(deletePages());
     dispatch(deleteConversations());
     navigate("/connect-page");
-    console.log("Integration Deleted ");
   });
 
   useEffect(() => {
@@ -64,15 +62,24 @@ const DeletePage = () => {
   }
   return (
     <>
-      <div className={styles["delete-page"]}>
-        <p className="heading">Delete Page</p>
-        <button className="btn" onClick={deleteIntegration}>
-          Delete Integration
-        </button>
-        <br />
-        <button className="btn" onClick={getConversations}>
-          Reply To Message
-        </button>
+      <div className={styles.deletePage}>
+        <div className={styles.deletePageContainer}>
+          <Title>
+            Facebook Page Integration
+            <p>
+              Integrated Page: <b>{pages[currentPage]?.name}</b>
+            </p>
+          </Title>
+          <div className={styles.deletePageContent}>
+            <button className={styles.btnRed} onClick={deleteIntegration}>
+              Delete Integration
+            </button>
+            <br />
+            <button className={styles.btn} onClick={getConversations}>
+              Reply To Message
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );

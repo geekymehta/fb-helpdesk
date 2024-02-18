@@ -16,10 +16,11 @@ const ConversationList = () => {
     const minutes = Math.floor(seconds / 60);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
+
     if (days > 0) return `${days}d`;
-    if (hours > 0) return `${hours}h`;
-    if (minutes > 0) return `${minutes}m`;
-    if (seconds > 0) return `${seconds}s`;
+    else if (hours > 0) return `${hours}h`;
+    else if (minutes > 0) return `${minutes}m`;
+    else if (seconds > 0) return `${seconds}s`;
   };
 
   return (
@@ -55,11 +56,12 @@ const ConversationList = () => {
                 }
                 unreadCount={conversation.unread_count}
                 canReply={conversation.can_reply}
-                time={
+                timeDelta={
                   conversation.messages.data
                     ? getTimerDelta(conversation.messages.data[0].created_time)
                     : null
                 }
+                time={conversation.messages.data[0].created_time}
                 subject={
                   conversation.messages.data
                     ? conversation.messages.data[0].subject

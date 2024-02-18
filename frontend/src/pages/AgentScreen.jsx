@@ -19,7 +19,6 @@ const AgentScreen = () => {
     const repeatFetchConversations = () => {
       if (currentViewPage) {
         const { id, access_token } = currentViewPage;
-
         dispatch(
           fetchConversations({ pageId: id, pageAccessToken: access_token })
         );
