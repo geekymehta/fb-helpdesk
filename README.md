@@ -1,7 +1,7 @@
 # Facebook Helpdesk
 
 ## Tech Stack
-- Frontend: React,Vite, Redux
+- Frontend: React, Vite, Redux
 - Backend: Node.js, MongoDB, Graph API, Messenger API, Pages API, Send API
 
 ## Local Installation
